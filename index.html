@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de atividades</title>
+    <!--<script defer type="application/javascript" src="canvas.js"></script>-->
+    <script defer type="application/javascript" src="tarefa.js"></script>
+    <script defer type="application/javascript" src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+    <div class="container scrollbar">
+        <div id="header" class="header">
+            <fieldset>
+                <h1>Trabalho AV3</h1>
+                <aside>Caminhos críticos de grafos em contexto de tarefas</aside>
+            </fieldset>
+        </div>
+
+        <div id="main" class="main">
+            <fieldset class="content">
+                <div class="content-column">
+                    <h2>Cadastrar tarefa</h2>
+                    <form id="formAtividade" autocomplete="off">
+                        <label for="atividade" class="float-label">
+                            <span>Descrição</span>
+                            <input placeholder=" " type="text" id="atividade" name="atividade">
+                        </label>
+                        <label for="duracao" class="float-label">
+                            <span>Duração</span>
+                            <input placeholder=" " type="number" id="duracao" name="duracao">
+                        </label>
+                        <label for="pre_req" class="float-label">
+                            <span>Tarefas pré-requisito (separado por virgula)</span>
+                            <input placeholder=" " type="text" id="anteriores">
+                        </label>
+                        <button id="botaoCadastro">Cadastrar</button>
+                    </form>
+                </div>
+                <div class="content-column">
+                    <h2>Lista de tarefas</h2>
+                    <div style="margin-bottom: 1rem;" class="scrollbar">
+                        <div class="lista-wrapper">
+                            <ul id="lista">
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
+                        <button id="botaoCaminho">Computar caminho crítico</button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="canvas-wrapper">
+            <fieldset>
+                <canvas></canvas>
+            </fieldset>
+        </div>
+    </div>
+</body>
+
+</html>
