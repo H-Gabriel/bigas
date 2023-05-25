@@ -5,7 +5,6 @@ const spanModal = document.querySelector('#spanModal');
 const inputElement = document.querySelector('#anteriores');
 
 const grafoAtividades = new Graph();
-var verticesComeco = [];
 var idCadastrado = 0;
 
 botaoCadastro.addEventListener('click', function (event) {
@@ -18,18 +17,26 @@ botaoCadastro.addEventListener('click', function (event) {
 function updateGraph(elementos) {
     idCadastrado++;
     let duracao = elementos[1].value;
-    let anteriores = elementos[2].value == '' ? [] : elementos[2].value.split(',');
+    let preRequisitos = elementos[2].value === '' ? [] : elementos[2].value.split(',');
 
-    if (anteriores.length != 0) {
-        anteriores.forEach(id => {
-            grafoAtividades[parseInt(id) - 1].proximos.push(idCadastrado);
+    let tarefaCadastrada = new Tarefa(idCadastrado, [], [], parseInt(duracao));
+    grafoAtividades.addVertice(tarefaCadastrada);
+
+    if (preRequisitos.length !== 0) {
+        preRequisitos.forEach(id => {
+            let tarefa = null;
+            for (vertice of grafoAtividades.vertices) {
+                if (vertice.id == id) {
+                    tarefa = vertice;
+                    break;
+                }
+            }
+            if (tarefa == null) {
+                grafoAtividades.vertices.pop();
+                throw new Error("O id " + id + " não é válido");
+            }
+            grafoAtividades.addAresta(tarefa, tarefaCadastrada)
         });
-    }
-
-    let atividadeCadastrada = new Tarefa(idCadastrado, anteriores, [], parseInt(duracao));
-    grafoAtividades.push(atividadeCadastrada);
-    if (anteriores.length == 0) {
-        verticesComeco.push(atividadeCadastrada)
     }
 }
 
@@ -47,9 +54,6 @@ inputElement.addEventListener('keydown', function (event) {
 });
 
 botaoCaminho.addEventListener('click', function (event) {
-    if (grafoAtividades.length == 0) return;
-    verticesComeco.forEach(vertice => {
-        console.log(vertice.id);
-        console.log(vertice.proximos);
-    });
+    if (grafoAtividades.vertices.length == 0) return;
+    grafoAtividades.computarTempos();
 });

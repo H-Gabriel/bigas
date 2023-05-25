@@ -5,21 +5,71 @@ class Tarefa {
         this.proximos = proximos;
         this.duracao = duracao;
         this.tChegada = 0;
+        this.tSaida = 0;
     }
 }
 
 class Graph {
     constructor() {
         this.vertices = [];
+        this.verticesFim = new Set();
     }
 
     addVertice(tarefa) {
         this.vertices.push(tarefa);
     }
 
-    addAresta(a, b) {
-        a.proximos.push(b);
-        b.anteriores.push(a);
+    addAresta(origem, destino) {
+        origem.proximos.push(destino);
+        destino.anteriores.push(origem);
+    }
+
+    computarTempos() {
+        let ordem = this.topologicalSort();
+        ordem.forEach(tarefa => {
+            tarefa.tSaida = tarefa.tChegada + tarefa.duracao;
+            tarefa.proximos.forEach(proximo => {
+                if (tarefa.tSaida > proximo.tChegada) {
+                    proximo.tChegada = tarefa.tSaida;
+                }
+            });
+        });
+        let a = this.caminhoCritico();
+        a.forEach(element => {
+            console.log(element.id);
+        })
+    }
+
+    caminhoCritico() {
+        let pilha = []
+
+        let maiorTempo = 0;
+        let maiorVertice = null;
+        this.verticesFim.forEach(vertice => {
+            if (vertice.tSaida > maiorTempo) {
+                maiorTempo = vertice.tSaida;
+                maiorVertice = vertice;
+            }
+        });
+
+        pilha.push(maiorVertice);
+
+        let anteriores = maiorVertice.anteriores;
+        
+        while(anteriores.length !== 0) {
+            let maiorTempo = 0;
+            let maiorAnterior = null;
+            anteriores.forEach(anterior => {
+                if (anterior.tSaida > maiorTempo) {
+                    maiorTempo = anterior.tSaida;
+                    maiorAnterior = anterior;
+                }
+            });
+            pilha.push(maiorAnterior);
+            anteriores = maiorAnterior.anteriores;
+        }
+
+        return pilha.reverse();
     }
 
     topologicalSort() {
@@ -41,6 +91,9 @@ class Graph {
         vertice.proximos.forEach(proximo => {
             if (!visitados.has(proximo)) {
                 this.dfs(proximo, visitados, pilha)
+            }
+            if (proximo.proximos.length === 0 && !this.verticesFim.has(proximo)) {
+                this.verticesFim.add(proximo);
             }
         })
 
