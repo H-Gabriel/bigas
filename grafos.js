@@ -337,11 +337,12 @@
                     this.hitDirty = !0
                 },
                 fitToViewport: function(t) {
+                    /*
                     let n = this.model.nodes
-                      , e = Number.POSITIVE_INFINITY
-                      , r = Number.POSITIVE_INFINITY
-                      , o = Number.NEGATIVE_INFINITY
-                      , i = Number.NEGATIVE_INFINITY;
+                      , e = Number.MAX_SAFE_INTEGER
+                      , r = Number.MAX_SAFE_INTEGER
+                      , o = Number.MIN_SAFE_INTEGER
+                      , i = Number.MIN_SAFE_INTEGER;
                     n.forEach(function(t) {
                         let n = t.x
                           , u = t.y;
@@ -364,7 +365,7 @@
                     n.forEach(function(t) {
                         t.x = (t.x - c) * l,
                         t.y = (t.y - s) * f
-                    })
+                    })*/
                 },
                 setHasLabels: function() {
                     this.hasLabels = !1;
