@@ -5,29 +5,61 @@ const spanModal = document.querySelector('#spanModal');
 const inputElement = document.querySelector('#anteriores');
 
 const grafoAtividades = new Graph();
+const colunas = { c0: 0 };
+const graphModel = {
+    nodes: [],
+    edges: []
+};
+
+var graph;
 var idCadastrado = 0;
+
+window.onload = updateRender;
 
 botaoCadastro.addEventListener('click', function (event) {
     event.preventDefault();
+    idCadastrado++;
     let elementos = form.elements;
     updateGraph(elementos);
     updateList(elementos);
+    updateRender();
 });
 
+function updateRender() {
+    if (graph !== undefined) {
+        graph.destroy();
+    }
+    graph = new ElGrapho({
+        container: document.querySelector('#graph-container'),
+        model: graphModel,
+        width: 800,
+        height: 500,
+        arrows: true,
+        edgeSize: 0.5, tooltips: false
+    });
+}
+
 function updateGraph(elementos) {
-    idCadastrado++;
     let duracao = elementos[1].value;
     let preRequisitos = elementos[2].value === '' ? [] : elementos[2].value.split(',');
-
     let tarefaCadastrada = new Tarefa(idCadastrado, [], [], parseInt(duracao));
+    
     grafoAtividades.addVertice(tarefaCadastrada);
 
-    if (preRequisitos.length !== 0) {
+    if (preRequisitos.length === 0) {
+        tarefaCadastrada.x = 0;
+        tarefaCadastrada.y = colunas.c0;
+        graphModel.nodes.push({ x: 0, y: 0, group: 1, label: tarefaCadastrada.id });
+        colunas.c0 = colunas.c0 + 1;
+    } else {
+        let x = 0, y = 0;
+        let tarefa = null;
         preRequisitos.forEach(id => {
-            let tarefa = null;
             for (vertice of grafoAtividades.vertices) {
                 if (vertice.id == id) {
                     tarefa = vertice;
+                    x = tarefa.x > x ? tarefa.x : x;
+                    y = tarefa.y > y ? tarefa.y : y;
                     break;
                 }
             }
@@ -37,6 +69,8 @@ function updateGraph(elementos) {
             }
             grafoAtividades.addAresta(tarefa, tarefaCadastrada)
         });
+        graphModel.nodes.push({ x: parseInt(x + 1), y: parseInt(y + 1), group: 1, label: tarefaCadastrada.id});
+        graphModel.edges.push({ from: parseInt(tarefa.id) - 1, to: parseInt(tarefaCadastrada.id) - 1 });
     }
 }
 
