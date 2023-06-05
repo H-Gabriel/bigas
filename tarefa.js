@@ -34,10 +34,7 @@ class Graph {
                 }
             });
         });
-        let a = this.caminhoCritico();
-        a.forEach(element => {
-            console.log(element.id);
-        })
+        return this.caminhoCritico();
     }
 
     caminhoCritico() {

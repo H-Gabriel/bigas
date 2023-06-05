@@ -107,6 +107,14 @@ inputElement.addEventListener('keydown', function (event) {
 });
 
 botaoCaminho.addEventListener('click', function (event) {
-    if (grafoAtividades.vertices.length == 0) return;
-    grafoAtividades.computarTempos();
+    if (grafoAtividades.vertices.length === 0 || grafoAtividades.vertices.length === 1) return;
+    let caminho = grafoAtividades.computarTempos();
+    caminho.forEach(tarefa => {
+        graphModel.nodes.forEach(vertice => {
+            if (vertice.label == tarefa.id) {
+                vertice.group = 0;
+            }
+        })
+    })
+    updateRender();
 });
