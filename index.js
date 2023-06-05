@@ -5,13 +5,14 @@ const spanModal = document.querySelector('#spanModal');
 const inputElement = document.querySelector('#anteriores');
 
 const grafoAtividades = new Graph();
-const colunas = { c0: 0 };
+const colunas = { cima: -0.3 , baixo: 0};
 const graphModel = {
     nodes: [],
     edges: []
 };
 
 var graph;
+var sentido = 1;
 var idCadastrado = 0;
 
 window.onload = updateRender;
@@ -48,9 +49,9 @@ function updateGraph(elementos) {
 
     if (preRequisitos.length === 0) {
         tarefaCadastrada.x = 0;
-        tarefaCadastrada.y = colunas.c0;
-        graphModel.nodes.push({ x: 0, y: colunas.c0, group: 1, label: tarefaCadastrada.id });
-        colunas.c0 = colunas.c0 + 0.3;
+        tarefaCadastrada.y = getY();
+        sentido *= -1;
+        graphModel.nodes.push({ x: 0, y: tarefaCadastrada.y, group: 1, label: tarefaCadastrada.id });
     } else {
         let x = 0, y = 0;
         let tarefa = null;
@@ -74,22 +75,29 @@ function updateGraph(elementos) {
                 throw new Error("O id " + id + " não é válido");
             }
             grafoAtividades.addAresta(tarefa, tarefaCadastrada)
-            x = x + 0.5;
-            if (colunas['c' + x] === undefined) {
-                y = 0;
-                colunas['c' + x] = 0;
-            } else {
-                colunas['c' + x] = colunas['c' + x] + 0.5;
-                y = colunas['c' + x];
+            x = parseFloat((x + 0.3).toFixed(1));
+            if (sentido === 1) {
+
             }
             if (colocarVertice) {
-                graphModel.nodes.push({ x: x, y: y, group: 1, label: tarefaCadastrada.id });
+                graphModel.nodes.push({ x: x, y: getY(), group: 1, label: tarefaCadastrada.id });
+                sentido *= -1;
                 colocarVertice = false;
             }
             graphModel.edges.push({ from: parseInt(tarefa.id) - 1, to: parseInt(tarefaCadastrada.id) - 1 });
             tarefaCadastrada.x = x;
             tarefaCadastrada.y = y;
         });
+    }
+}
+
+function getY() {
+    if (sentido === 1) {
+        colunas.cima = parseFloat((colunas.cima + 0.3).toFixed(1));
+        return colunas.cima;
+    } else {
+        colunas.baixo = parseFloat((colunas.baixo - 0.3).toFixed(1));
+        return colunas.baixo;
     }
 }
 
