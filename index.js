@@ -51,7 +51,7 @@ function updateGraph(elementos) {
         tarefaCadastrada.x = 0;
         tarefaCadastrada.y = getY();
         sentido *= -1;
-        graphModel.nodes.push({ x: 0, y: tarefaCadastrada.y, group: 1, label: tarefaCadastrada.id });
+        graphModel.nodes.push({ x: 0, y: tarefaCadastrada.y, group: 1, label: tarefaCadastrada.id + ' - ' + tarefaCadastrada.duracao });
     } else {
         let x = 0, y = 0;
         let tarefa = null;
@@ -76,11 +76,8 @@ function updateGraph(elementos) {
             }
             grafoAtividades.addAresta(tarefa, tarefaCadastrada)
             x = parseFloat((x + 0.3).toFixed(1));
-            if (sentido === 1) {
-
-            }
             if (colocarVertice) {
-                graphModel.nodes.push({ x: x, y: getY(), group: 1, label: tarefaCadastrada.id });
+                graphModel.nodes.push({ x: x, y: getY(), group: 1, label: tarefaCadastrada.id + ' - ' + tarefaCadastrada.duracao });
                 sentido *= -1;
                 colocarVertice = false;
             }
